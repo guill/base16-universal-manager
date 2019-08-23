@@ -51,15 +51,15 @@ func main() {
 	scheme := schemeList.Find(appConf.Colorscheme)
 	fmt.Println("[CONFIG]: Selected scheme: ", scheme.Name)
 
-	for k := range appConf.Applications {
+	for k, v := range appConf.Applications {
+		if v.Enabled {
+			schemeList = LoadBase16ColorschemeList()
+			templateList = LoadBase16TemplateList()
 
-		schemeList = LoadBase16ColorschemeList()
-		templateList = LoadBase16TemplateList()
+			templ := templateList.Find(k)
 
-		templ := templateList.Find(k)
-
-		Base16Render(templ, scheme)
-
+			Base16Render(templ, scheme)
+		}
 	}
 
 }
