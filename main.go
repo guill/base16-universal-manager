@@ -129,13 +129,13 @@ func Base16Render(templ Base16Template, scheme Base16Colorscheme, app string) er
 		}
 		renderedFile := mustache.Render(templFileData, scheme.MustacheContext(v.Extension))
 
-		savePath, err := getSavePath(appConf.Applications[app].Files[k].Path, k+v.Extension)
-		if err != nil {
-			return fmt.Errorf("could not get location for save path: %w", err)
+		saveBasePath := appConf.Applications[templ.Name].Files[k] + "/"
+		if saveBasePath == "/" {
+			saveBasePath = "./output/"
 		}
-		if savePath == "" {
-			continue
-		}
+		p4 := filepath.Join(".", saveBasePath)
+		os.MkdirAll(p4, os.ModePerm)
+		savePath := saveBasePath + k + v.Extension
 
 		//If DryRun is enabled, just print the output location for debugging
 		if appConf.DryRun {
