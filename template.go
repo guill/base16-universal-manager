@@ -40,7 +40,9 @@ func (l *Base16TemplateList) GetBase16Template(name string) Base16Template {
 	newTemplate.RawBaseURL = "https://raw.githubusercontent.com/" + parts[3] + "/" + parts[4] + "/master/"
 	newTemplate.Name = name
 
-	templatePath := path.Join(appConf.TemplatesCachePath, name+".yaml")
+	dir := appConf.TemplatesCachePath + name
+	path := dir + "/config.yaml"
+	os.MkdirAll(dir, os.ModePerm)
 
 	// Create local template file, if not present
 	if _, err := os.Stat(templatePath); os.IsNotExist(err) {
