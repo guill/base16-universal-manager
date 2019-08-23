@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/hoisie/mustache"
 	"gopkg.in/alecthomas/kingpin.v2"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 )
@@ -69,8 +70,24 @@ func Base16Render(templ Base16Template, scheme Base16Colorscheme) {
 	fmt.Println("[RENDER]: Rendering template \"" + templ.Name + "\"")
 
 	for k, v := range templ.Files {
-		templFileData, err := DownloadFileToStirng(templ.RawBaseURL + "templates/" + k + ".mustache")
+		dir := appConf.TemplatesCachePath + templ.Name
+		path := dir + "/" + k + ".mustache"
+		os.MkdirAll(dir, os.ModePerm)
+
+		// Create local template file, if not present
+		if _, err := os.Stat(path); os.IsNotExist(err) {
+			templFileData, err := DownloadFileToStirng(templ.RawBaseURL + "templates/" + k + ".mustache")
+			check(err)
+			saveFile, err := os.Create(path)
+			//TODO delete old file?
+			defer saveFile.Close()
+			saveFile.Write([]byte(templFileData))
+			saveFile.Close()
+		}
+
+		templFileDataBytes, err := ioutil.ReadFile(path)
 		check(err)
+		templFileData := string(templFileDataBytes)
 		renderedFile := mustache.Render(templFileData, scheme.MustacheContext())
 
 		saveBasePath := appConf.Applications[templ.Name].Files[k] + "/"
