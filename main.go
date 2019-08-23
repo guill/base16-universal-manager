@@ -90,13 +90,24 @@ func Base16Render(templ Base16Template, scheme Base16Colorscheme) {
 		templFileData := string(templFileDataBytes)
 		renderedFile := mustache.Render(templFileData, scheme.MustacheContext())
 
-		saveBasePath := appConf.Applications[templ.Name].Files[k] + "/"
-		if saveBasePath == "/" {
-			saveBasePath = "./output/"
+		// If this is a path with the right extension, we use the full path as output
+		// If not, we treat it as a directory and use the same name as the template
+		pathInput := appConf.Applications[templ.Name].Files[k]
+
+		// Default to output folder instead of root '/' folder
+		if pathInput == "" {
+			pathInput = "./output/"
 		}
-		p4 := filepath.Join(".", saveBasePath)
-		os.MkdirAll(p4, os.ModePerm)
-		savePath := saveBasePath + k + v.Extension
+
+		// Check whether we should treat this as a file  or directory path
+		dirPath, fileName := filepath.Split(pathInput)
+		if v.Extension != "" && filepath.Ext(fileName) != v.Extension {
+			dirPath = pathInput
+			fileName = k + v.Extension
+		}
+
+		os.MkdirAll(dirPath, os.ModePerm)
+		savePath := filepath.Join(dirPath, fileName)
 
 		//If DryRun is enabled, just print the output location for debugging
 		if appConf.DryRun {
