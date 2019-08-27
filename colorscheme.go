@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/lucasb-eyer/go-colorful"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
@@ -94,6 +95,19 @@ func (s Base16Colorscheme) MustacheContext() map[string]interface{} {
 		ret[baseKey+"-dec-g"] = gValf / 255
 		ret[baseKey+"-dec-b"] = bValf / 255
 
+		color, err := colorful.Hex("#" + color)
+		if err != nil {
+			panic("Invalid hex color")
+		}
+
+		h, s, v := color.Hsv()
+		ret[baseKey+"-rgb-h"] = int32(h * 255.0 / 360.0)
+		ret[baseKey+"-rgb-s"] = int32(s * 255.0)
+		ret[baseKey+"-rgb-v"] = int32(v * 255.0)
+
+		ret[baseKey+"-dec-h"] = h / 360.0
+		ret[baseKey+"-dec-s"] = s
+		ret[baseKey+"-dec-v"] = v
 	}
 
 	return ret
