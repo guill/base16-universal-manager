@@ -91,9 +91,9 @@ func (s Base16Colorscheme) MustacheContext() map[string]interface{} {
 		ret[baseKey+"-rgb-g"] = gValf
 		ret[baseKey+"-rgb-b"] = bValf
 
-		ret[baseKey+"-dec-r"] = rValf / 255
-		ret[baseKey+"-dec-g"] = gValf / 255
-		ret[baseKey+"-dec-b"] = bValf / 255
+		ret[baseKey+"-dec-r"] = float32(rValf) / 255.0
+		ret[baseKey+"-dec-g"] = float32(gValf) / 255.0
+		ret[baseKey+"-dec-b"] = float32(bValf) / 255.0
 
 		color, err := colorful.Hex("#" + color)
 		if err != nil {
