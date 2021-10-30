@@ -15,7 +15,7 @@ import (
 	"strings"
 
 	"github.com/agnivade/levenshtein"
-	"gopkg.in/yaml.v2"
+	"github.com/go-yaml/yaml"
 )
 
 //DownloadFileToStirng downloads a file from a given URL and returns it's

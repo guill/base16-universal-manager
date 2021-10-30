@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/hoisie/mustache"
-	"gopkg.in/alecthomas/kingpin.v2"
+	"github.com/alecthomas/kingpin"
 	"io/ioutil"
 	"os"
 	"path/filepath"

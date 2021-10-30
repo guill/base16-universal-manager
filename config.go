@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v2"
+	"github.com/go-yaml/yaml"
 	"io/ioutil"
 	"os"
 )
